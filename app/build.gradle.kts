@@ -52,6 +52,8 @@ android {
 
 dependencies {
     implementation("androidx.room:room-runtime:2.6.1")
+    implementation(libs.androidx.appcompat)
+    implementation(libs.androidx.constraintlayout)
     kapt("androidx.room:room-compiler:2.6.1")
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
