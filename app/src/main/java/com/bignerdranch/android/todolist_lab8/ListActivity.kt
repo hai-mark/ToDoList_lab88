@@ -17,7 +17,13 @@ class ListActivity : AppCompatActivity() {
         setContentView(R.layout.activity_list)
 
         val recyclerView = findViewById<RecyclerView>(R.id.recycler_view)
-        val adapter = TaskAdapter()
+        val adapter = TaskAdapter { task -> // Передаем лямбда-функцию для обработки нажатий
+            val intent = Intent(this, AddActivity::class.java)
+            intent.putExtra("task_id", task.id)
+            intent.putExtra("task_description", task.description)
+            intent.putExtra("task_priority", task.priority)
+            startActivity(intent)
+        }
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(this)
 
@@ -28,9 +34,6 @@ class ListActivity : AppCompatActivity() {
         taskViewModel.allTasks.observe(this, { tasks ->
             tasks?.let { adapter.submitList(it) }
         })
-
-        val itemTouchHelper = ItemTouchHelper(SwipeToDelete(adapter, taskViewModel))
-        itemTouchHelper.attachToRecyclerView(recyclerView)
 
         findViewById<FloatingActionButton>(R.id.fab).setOnClickListener {
             startActivity(Intent(this, AddActivity::class.java))

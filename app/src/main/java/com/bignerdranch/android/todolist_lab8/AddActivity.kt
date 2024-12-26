@@ -13,6 +13,7 @@ import kotlinx.coroutines.launch
 class AddActivity : AppCompatActivity() {
 
     private lateinit var taskDao: TaskDao
+    private var taskId: Long = -1 // ID задачи для редактирования
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,17 +21,38 @@ class AddActivity : AppCompatActivity() {
 
         taskDao = AppDatabase.getDatabase(application).taskDao()
 
+        // Получаем данные задачи, если они были переданы
+        val descriptionInput = findViewById<EditText>(R.id.description_input)
+        val priorityGroup = findViewById<RadioGroup>(R.id.priority_group)
+
+        taskId = intent.getLongExtra("task_id", -1)
+        val taskDescription = intent.getStringExtra("task_description")
+        val taskPriority = intent.getIntExtra("task_priority", 3)
+
+        if (taskId != -1L) { // Редактируем задачу
+            descriptionInput.setText(taskDescription)
+            when (taskPriority) {
+                1 -> priorityGroup.check(R.id.high_priority)
+                2 -> priorityGroup.check(R.id.medium_priority)
+                3 -> priorityGroup.check(R.id.low_priority)
+            }
+        }
+
         findViewById<Button>(R.id.add_button).setOnClickListener {
-            val description = findViewById<EditText>(R.id.description_input).text.toString()
-            val priority = when (findViewById<RadioGroup>(R.id.priority_group).checkedRadioButtonId) {
-                R.id.high_priority -> 1 // High priority
-                R.id.medium_priority -> 2 // Medium priority
-                else -> 3 // Low priority by default
+            val description = descriptionInput.text.toString()
+            val priority = when (priorityGroup.checkedRadioButtonId) {
+                R.id.high_priority -> 1
+                R.id.medium_priority -> 2
+                else -> 3
             }
 
-            val task = Task(description = description, priority = priority)
-            // Используйте корутины для вставки задачи в базу данных
-            insertTask(task)
+            if (taskId == -1L) { // Новая задача
+                val task = Task(description = description, priority = priority)
+                insertTask(task)
+            } else { // Обновление существующей задачи
+                val task = Task(id = taskId, description = description, priority = priority)
+                updateTask(task)
+            }
             finish()
         }
     }
@@ -38,6 +60,12 @@ class AddActivity : AppCompatActivity() {
     private fun insertTask(task: Task) {
         CoroutineScope(Dispatchers.IO).launch {
             taskDao.insert(task)
+        }
+    }
+
+    private fun updateTask(task: Task) {
+        CoroutineScope(Dispatchers.IO).launch {
+            taskDao.update(task)
         }
     }
 }

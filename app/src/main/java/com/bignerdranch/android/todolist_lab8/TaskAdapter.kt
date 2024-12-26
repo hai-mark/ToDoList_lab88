@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 
-class TaskAdapter : ListAdapter<Task, TaskAdapter.TaskViewHolder>(TaskDiffCallback()) {
+class TaskAdapter(private val onTaskClick: (Task) -> Unit) : ListAdapter<Task, TaskAdapter.TaskViewHolder>(TaskDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {
         val itemView = LayoutInflater.from(parent.context)
@@ -19,6 +19,9 @@ class TaskAdapter : ListAdapter<Task, TaskAdapter.TaskViewHolder>(TaskDiffCallba
     override fun onBindViewHolder(holder: TaskViewHolder, position: Int) {
         val currentTask = getItem(position)
         holder.bind(currentTask)
+        holder.itemView.setOnClickListener {
+            onTaskClick(currentTask)
+        }
     }
 
     class TaskViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -26,7 +29,6 @@ class TaskAdapter : ListAdapter<Task, TaskAdapter.TaskViewHolder>(TaskDiffCallba
 
         fun bind(task: Task) {
             taskDescription.text = task.description
-            // Установите цвет в зависимости от приоритета
             when (task.priority) {
                 1 -> itemView.setBackgroundColor(0xFFFF0000.toInt()) // Красный для High
                 2 -> itemView.setBackgroundColor(0xFFFFFF00.toInt()) // Желтый для Medium
@@ -43,9 +45,5 @@ class TaskAdapter : ListAdapter<Task, TaskAdapter.TaskViewHolder>(TaskDiffCallba
         override fun areContentsTheSame(oldItem: Task, newItem: Task): Boolean {
             return oldItem == newItem
         }
-    }
-
-    fun getItemAtPosition(position: Int): Task {
-        return getItem(position) // Возвращаем элемент по позиции
     }
 }
