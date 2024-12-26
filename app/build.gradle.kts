@@ -52,7 +52,7 @@ android {
 
 dependencies {
     implementation("androidx.room:room-runtime:2.6.1")
-    implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1")
+    implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.7")
     implementation ("androidx.lifecycle:lifecycle-livedata-ktx:2.6.1")
     implementation ("androidx.recyclerview:recyclerview:1.3.0")
     implementation(libs.androidx.appcompat)
