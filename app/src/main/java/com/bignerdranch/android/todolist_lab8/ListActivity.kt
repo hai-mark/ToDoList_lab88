@@ -29,7 +29,7 @@ class ListActivity : AppCompatActivity() {
             tasks?.let { adapter.submitList(it) }
         })
 
-        val itemTouchHelper = ItemTouchHelper(SwipeToDelete(adapter))
+        val itemTouchHelper = ItemTouchHelper(SwipeToDelete(adapter, taskViewModel))
         itemTouchHelper.attachToRecyclerView(recyclerView)
 
         findViewById<FloatingActionButton>(R.id.fab).setOnClickListener {

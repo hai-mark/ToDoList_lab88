@@ -60,6 +60,7 @@ dependencies {
     implementation(libs.androidx.recyclerview)
     implementation(libs.material)
     kapt("androidx.room:room-compiler:2.6.1")
+    implementation ("androidx.room:room-ktx:2.6.1")
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
