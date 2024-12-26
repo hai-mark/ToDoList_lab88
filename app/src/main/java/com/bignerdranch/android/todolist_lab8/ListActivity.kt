@@ -20,7 +20,10 @@ class ListActivity : AppCompatActivity() {
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(this)
 
-        taskViewModel = ViewModelProvider(this).get(TaskViewModel::class.java)
+        val taskDao = AppDatabase.getDatabase(application).taskDao()
+        val factory = TaskViewModelFactory(taskDao)
+        taskViewModel = ViewModelProvider(this, factory).get(TaskViewModel::class.java)
+
         taskViewModel.allTasks.observe(this, { tasks ->
             tasks?.let { adapter.submitList(it) }
         })
