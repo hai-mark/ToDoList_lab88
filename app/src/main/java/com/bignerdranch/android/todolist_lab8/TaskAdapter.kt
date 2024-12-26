@@ -44,4 +44,8 @@ class TaskAdapter : ListAdapter<Task, TaskAdapter.TaskViewHolder>(TaskDiffCallba
             return oldItem == newItem
         }
     }
+
+    fun getItemAtPosition(position: Int): Task {
+        return getItem(position) // Возвращаем элемент по позиции
+    }
 }
